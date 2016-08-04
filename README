@@ -1,0 +1,7 @@
+sanitize file and folder names by stripping unwanted characters
+won't touch any files/folders starting with .
+v2.0 by Antoni Sawicki <as@tenoware.com>
+
+Default configuration:
+alow alpha, numeric, underscore and dot
+will also convert spaces to underscore
