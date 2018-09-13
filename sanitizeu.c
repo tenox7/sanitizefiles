@@ -84,11 +84,11 @@ int recurse(char *name) {
     char *m;
     int l=0;
 
-    n=malloc(FILENAME_MAX);
+    n=calloc(1, FILENAME_MAX);
     if(!n)
         error("Unable to allocate memory at %s", name);
 
-    m=malloc(FILENAME_MAX);
+    m=calloc(1, FILENAME_MAX);
     if(!n)
         error("Unable to allocate memory at %s", name);
 
