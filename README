@@ -1,7 +1,5 @@
 sanitize file and folder names by stripping unwanted characters
-won't touch any files/folders starting with .
-v2.0 by Antoni Sawicki <as@tenoware.com>
+won't touch any files/folders starting with a dot (.)
 
-Default configuration:
-alow alpha, numeric, underscore and dot
-will also convert spaces to underscore
+sanitizew.c is windows
+sanitizeu.c is unix

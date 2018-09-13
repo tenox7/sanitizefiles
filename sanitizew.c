@@ -2,10 +2,7 @@
 // won't touch any files/folders starting with .
 // v2.0 by Antoni Sawicki <as@tenoware.com>
 //
-// Configuration:
-// alow alpha, numeric, underscore and dot
-// will also convert spaces to underscore
-#define STRIPCFG  L"anu_."
+#define STRIPCFG  L"anu_.-+"
 
 
 #include <windows.h>
