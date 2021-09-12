@@ -1,5 +1,6 @@
 sanitize file and folder names by stripping unwanted characters
 won't touch any files/folders starting with a dot (.)
+if a file name already exists it will keep appending _ to the file name
 
-sanitizew.c is windows
-sanitizeu.c is unix
+sanitizew.c is for windows
+sanitizeu.c is for unix
