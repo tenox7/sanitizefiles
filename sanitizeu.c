@@ -2,7 +2,7 @@
 // won't touch any files/folders starting with .
 // v2.1 by Antoni Sawicki <as@tenoware.com>
 
-#define STRIPCFG "anu_-./+"
+#define STRIPCFG "anu./-+"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -61,8 +61,8 @@ int strip(char *str, int len, char *allow) {
             *(dst++)=*str;
         else if(number && isdigit(*str))
             *(dst++)=*str;
-        else if(spctou && *str==' ')
-            *(dst++)='_';
+        else if(spctou && (*str==' ' || *str=='_'))
+            *(dst++)='-';
         else if(strlen(allow))
             for(a=0; a<strlen(allow); a++) 
                 if(*str==allow[a])
@@ -75,7 +75,7 @@ int strip(char *str, int len, char *allow) {
     return 0;
 }
 
-int recurse(char *name) {
+int sanitize(char *name) {
     DIR *dir;
     struct dirent *e;
     struct stat f;
@@ -124,7 +124,7 @@ int recurse(char *name) {
 
             if(f.st_mode & S_IFDIR) {
                 folders++;
-                recurse(m);
+                sanitize(m);
             }
             else {
                 files++;
@@ -145,7 +145,7 @@ int main(int argc, char **argv) {
     if(argc!=2)
         error("Usage: %s <topdir>\n\n", argv[0]);
 
-    recurse(argv[1]);
+    sanitize(argv[1]);
 
     printf("Done.\n"
            "Files  : %u\n"
