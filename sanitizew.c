@@ -26,13 +26,13 @@ void error(int exit, WCHAR* msg, ...) {
     err = GetLastError();
 
     va_start(valist, msg);
-    vsnwprintf(vaBuff, sizeof(vaBuff)/sizeof(vaBuff[0]), msg, valist);
+    vsnwprintf(vaBuff, ARRAYSIZE(vaBuff), msg, valist);
     va_end(valist);
 
     wprintf(L"%s: %s\n", (exit) ? L"ERROR" : L"WARNING", vaBuff);
 
     if (err) {
-        FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), errBuff, sizeof(errBuff)/sizeof(WCHAR), NULL);
+        FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_MAX_WIDTH_MASK, NULL, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), errBuff, ARRAYSIZE(errBuff), NULL);
         wprintf(L"[0x%08X] %s", err, errBuff);
     }
     else {
@@ -102,7 +102,7 @@ int recurse(WCHAR* dir) {
     WCHAR* part;
 
     ZeroMemory(dirn, sizeof(dirn));
-    swprintf(dirn, sizeof(dirn)/sizeof(WCHAR), L"%s\\*", dir);
+    swprintf(dirn, ARRAYSIZE(dirn), L"%s\\*", dir);
 
     hFind = FindFirstFileW(dirn, &find_data);
     if (hFind == INVALID_HANDLE_VALUE)
@@ -115,24 +115,24 @@ int recurse(WCHAR* dir) {
         ZeroMemory(new_file_name, sizeof(new_file_name));
         ZeroMemory(newnew, sizeof(newnew));
 
-        wcsncpy(old_file_name, find_data.cFileName, sizeof(old_file_name)/sizeof(WCHAR));
+        wcsncpy(old_file_name, find_data.cFileName, ARRAYSIZE(old_file_name));
         if (old_file_name[0] != L'.') {
-            wcsncpy(new_file_name, old_file_name, sizeof(new_file_name)/sizeof(WCHAR));
+            wcsncpy(new_file_name, old_file_name, ARRAYSIZE(new_file_name));
             wstrip(new_file_name, sizeof(new_file_name), STRIPCFG);
 
             if (wcscmp(new_file_name, old_file_name) != 0) {
                 changed++;
-                swprintf(old_full_name, sizeof(old_full_name) / sizeof(WCHAR), L"%s\\%s", dir, old_file_name);
-                swprintf(new_full_name, sizeof(new_full_name) / sizeof(WCHAR), L"%s\\%s", dir, new_file_name);
+                swprintf(old_full_name, ARRAYSIZE(old_full_name), L"%s\\%s", dir, old_file_name);
+                swprintf(new_full_name, ARRAYSIZE(new_full_name), L"%s\\%s", dir, new_file_name);
 
                 if (MoveFileW(old_full_name, new_full_name) == 0) {
                     error(0, L"Could not rename [%s] to [%s] will try adding '_'", old_full_name, new_full_name);
 
                     part = wcsrchr(new_file_name, L'.');
                     if (part)
-                        swprintf(new_full_name, sizeof(new_full_name) / sizeof(WCHAR), L"%s\\%s_%s", dir, wcsncat(newnew, new_file_name, wcslen(new_file_name) - wcslen(part)), part);
+                        swprintf(new_full_name, ARRAYSIZE(new_full_name), L"%s\\%s_%s", dir, wcsncat(newnew, new_file_name, wcslen(new_file_name) - wcslen(part)), part);
                     else
-                        swprintf(new_full_name, sizeof(new_full_name) / sizeof(WCHAR), L"%s\\%s_", dir, new_file_name);
+                        swprintf(new_full_name, ARRAYSIZE(new_full_name), L"%s\\%s_", dir, new_file_name);
 
                     if (MoveFileW(old_full_name, new_full_name) == 0)
                         error(1, L"Unable to Rename [%s] to [%s]", old_full_name, new_full_name);
@@ -141,7 +141,7 @@ int recurse(WCHAR* dir) {
                 }
             }
             else {
-                swprintf(new_full_name, sizeof(new_full_name)/sizeof(WCHAR), L"%s\\%s", dir, old_file_name);
+                swprintf(new_full_name, ARRAYSIZE(new_full_name), L"%s\\%s", dir, old_file_name);
             }
 
             if ((find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == FILE_ATTRIBUTE_DIRECTORY) {
